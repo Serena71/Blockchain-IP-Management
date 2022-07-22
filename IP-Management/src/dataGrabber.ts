@@ -14,7 +14,7 @@ export async function grabTemperature(city: string): Promise<number> {
 //   const axios = require('axios');
 //   if (method === 'get') {
 //     return axios
-//       .get('http://localhost:5050/test')
+//       .get('http://localhost:5050/test', { params: body })
 //       .then(async function (response: any) {
 //         return response?.data;
 //       })
