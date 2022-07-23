@@ -11,6 +11,8 @@ then run `npm start`
 ## IP-Management Server
 Navigate to IP-Management folder
 
+run `npm install`
+
 run `npx tsc`
 
 run `node build/index.js deploy oracle` to deployer oracle
