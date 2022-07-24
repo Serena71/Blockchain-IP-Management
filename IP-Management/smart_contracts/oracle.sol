@@ -1,3 +1,7 @@
+// SPDX-License-Identifier: GPL-3.0
+
+pragma solidity >=0.7.0 <0.9.0;
+
 interface OracleInterface {
     function requestData(uint256 requestType, uint256 requestId, bytes memory data) external;
 }
@@ -12,7 +16,6 @@ abstract contract OracleClient {
     }
 
     function requestDataFromOracle(uint256 requestType, bytes memory data) public {
-
         Oracle(oracleAddress).requestData(requestType, requestCounter++, data);
     }
 
@@ -21,13 +24,13 @@ abstract contract OracleClient {
 
 contract Oracle is OracleInterface{
     address trustedServerAddress;
-    event request(uint256, uint256, address, bytes);
+    event request(uint256 requestType, uint256 requestId, address caller, bytes data);
 
     constructor (address add) {
         trustedServerAddress = add;
     }
 
-    function requestData(uint256 requestType, uint256 requestId, bytes memory data) public {
+    function requestData(uint256 requestType, uint256 requestId, bytes memory data) public override{
         emit request(requestType, requestId, msg.sender, data);
     }
 
@@ -37,10 +40,13 @@ contract Oracle is OracleInterface{
 }
 
 abstract contract LicenseAgreementOracleClient is OracleClient {
+    uint256 public hash = 0;
+    bool public license = false;
+
     constructor (address add) OracleClient(add){}
 
     // buyer, song, duration, totalCost, purchaseDate, expiryDate
-    function writeLicenseAgreement(address buyer, address song, uint256 duration, uint256 totalCost, uint256 purchaseDate, uint256 Date) public{
+    function writeLicenseAgreement(address buyer, address song, uint256 duration, uint256 totalCost) public{
         // Writing license and awaitng hash
 
         bytes memory requestData = abi.encode(buyer, song, duration, totalCost);
@@ -49,9 +55,8 @@ abstract contract LicenseAgreementOracleClient is OracleClient {
 
     function receiveHash(bytes memory returnData) private{
         // Receiving hash
-
         // Call song contracts receive hash
-        
+        hash = 1;
     }
 
     function requestLicenseStatus() public{
@@ -61,9 +66,15 @@ abstract contract LicenseAgreementOracleClient is OracleClient {
     }
 
     function receiveLicenseStatus(bytes memory returnData) private{
-        // Call song contracts receive license status
+        // Figure out what to do with license status
 
-        // Call song contracts receive license 
+        // Used only to verify function was called correctly
+        license = true;
+    }
+
+    function testGetZero() pure public returns(uint256) {
+        uint256 x = 0;
+        return x;
     }
 
     function replyDataFromOracle(uint256 requestId, bytes memory data) public override
@@ -75,5 +86,6 @@ abstract contract LicenseAgreementOracleClient is OracleClient {
         } else if (requestType == 1){
             receiveHash(returnData);
         }
+        requestId = 0;
     }
 }
