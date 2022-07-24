@@ -1,5 +1,7 @@
 const fs = require('fs');
 const AsyncLock = require('async-lock');
+const merkleJson = require('merkle-json');
+const { MerkleJson } = require('merkle-json');
 const lock = new AsyncLock();
 
 /***************************************************************
@@ -50,13 +52,13 @@ const addLicense = (buyer, song, duration, totalCost) =>
       totalCost,
     };
 
-    const stringifiedData = JSON.stringify(agreementData);
-    // const hash = sha256(stringifiedData);
-    let hash = Object.keys(licenses).pop();
-    hash = parseInt(hash) + 1;
-    licenses[hash] = agreementData;
+    let mj = new MerkleJson();
+    // let hash = Object.keys(licenses).pop();
+    // hash = parseInt(hash) + 1;
+    let merklehash = mj.hash(agreementData);
+    licenses[merklehash] = agreementData;
 
-    resolve(hash);
+    resolve(merklehash);
   });
 
 /***************************************************************

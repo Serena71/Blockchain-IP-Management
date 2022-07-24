@@ -4,8 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "do": "npx tsc && node build/index.js deploy oracle",
-    "lo": "npx tsc && node build/index.js listen oracle",
+    "start": "npx tsc && node build/index.js deploy oracle",
+    "deploy": "npx tsc && node build/index.js deploy userapp",
+    "listen": "npx tsc && node build/index.js listen oracle",
+    "invoke": "npx tsc && node build/index.js invoke userapp",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
