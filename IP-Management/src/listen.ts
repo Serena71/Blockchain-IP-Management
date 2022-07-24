@@ -1,7 +1,7 @@
 import { Contract } from 'web3-eth-contract';
 
 export function handleRequestEvent(contract: Contract, grabData: Function) {
-    contract.events["request(uint256,address,bytes)"]()
+    contract.events["request(uint256,uint256,address,bytes)"]()
         .on("connected", function (subscriptionId: any) {
             console.log("listening on event 'request'" + ", subscriptionId: " + subscriptionId);
         })
