@@ -16,7 +16,7 @@ abstract contract OracleClient {
         Oracle(oracleAddress).requestData(requestType, requestCounter++, data);
     }
 
-    function replyDataFromOracle(uint256 requestId, bytes memory data) public virtual;
+    function replyDataFromOracle(uint256 requestType, uint256 requestId, bytes memory data) public virtual;
 }
 
 contract Oracle is OracleInterface{
@@ -31,8 +31,8 @@ contract Oracle is OracleInterface{
         emit request(requestType, requestId, msg.sender, data);
     }
 
-    function replyData(uint256 requestId, bytes memory data) public {
-        OracleClient(trustedServerAddress).replyDataFromOracle(requestId, data);
+    function replyData(uint256 requestType, uint256 requestId, bytes memory data) public {
+        OracleClient(trustedServerAddress).replyDataFromOracle(requestType, requestId, data);
     }
 }
 
@@ -40,19 +40,13 @@ abstract contract LicenseAgreementOracleClient is OracleClient {
     constructor (address add) OracleClient(add){}
 
     // buyer, song, duration, totalCost, purchaseDate, expiryDate
-    function writeLicenseAgreement(address buyer, address song, uint256 duration, uint256 totalCost, uint256 purchaseDate, uint256 Date) public{
+    function writeLicenseAgreement(address buyer, address song, uint256 duration, uint256 totalCost) public{
         // Writing license and awaitng hash
 
         bytes memory requestData = abi.encode(buyer, song, duration, totalCost);
         requestDataFromOracle(1, requestData);
     }
 
-    function receiveHash(bytes memory returnData) private{
-        // Receiving hash
-
-        // Call song contracts receive hash
-        
-    }
 
     function requestLicenseStatus() public{
         // Requesting status and receiving status
@@ -60,20 +54,27 @@ abstract contract LicenseAgreementOracleClient is OracleClient {
         requestDataFromOracle(0, requestData);
     }
 
-    function receiveLicenseStatus(bytes memory returnData) private{
+    
+    function replyDataFromOracle(uint256 requestType, uint256 requestId, bytes memory data) public override
+    {
+        // Decode data and segment it into receive hash or receive license
+        (string memory returnData) = abi.decode(data, (string));
+        if (requestType == 0){
+            receiveLicenseStatus(requestId,returnData);
+        } else if (requestType == 1){
+            receiveHash(requestId, returnData);
+        }
+    }
+     function receiveHash( uint256 requestId, string memory returnData) private{
+        // Receiving hash
+        // Call song contracts receive hash
+        
+    }
+
+    function receiveLicenseStatus( uint256 requestId, string memory returnData) private{
         // Call song contracts receive license status
 
         // Call song contracts receive license 
     }
 
-    function replyDataFromOracle(uint256 requestId, bytes memory data) public override
-    {
-        // Decode data and segment it into receive hash or receive license
-        (uint256 requestType, bytes memory returnData) = abi.decode(data, (uint256, bytes));
-        if (requestType == 0){
-            receiveLicenseStatus(returnData);
-        } else if (requestType == 1){
-            receiveHash(returnData);
-        }
-    }
 }
