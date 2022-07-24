@@ -3,101 +3,85 @@
 pragma solidity >=0.7.0 <0.9.0;
 
 interface OracleInterface {
-    function requestData(uint256 requestId, bytes memory data) external;
+    function requestData(uint256 requestType, uint256 requestId, bytes memory data) external;
 }
 
 abstract contract OracleClient {
-    address _oracleAddr;
+    uint256 requestCounter;
 
-    uint256 _requestCounter = 0;
+    address oracleAddress;
 
-    constructor(address oracleAd) {
-        _oracleAddr = oracleAd;
+    constructor (address add) {
+        oracleAddress = add;
     }
 
-    modifier oracleOnly() {
-        require(msg.sender == _oracleAddr);
-        _;
+    function requestDataFromOracle(uint256 requestType, bytes memory data) public {
+        Oracle(oracleAddress).requestData(requestType, requestCounter++, data);
     }
 
-    function requestDataFromOracle(bytes memory data)
-        internal
-        returns (uint256)
+    function replyDataFromOracle(uint256 requestType, uint256 requestId, bytes memory data) public virtual;
+}
+
+contract Oracle is OracleInterface{
+    address trustedServerAddress;
+    event request(uint256 requestType, uint256 requestId, address caller, bytes data);
+
+    constructor (address add) {
+        trustedServerAddress = add;
+    }
+
+    function requestData(uint256 requestType, uint256 requestId, bytes memory data) public override{
+        emit request(requestType, requestId, msg.sender, data);
+    }
+
+    function replyData(uint256 requestType, uint256 requestId, bytes memory data) public {
+        OracleClient(trustedServerAddress).replyDataFromOracle(requestType, requestId, data);
+    }
+}
+
+abstract contract LicenseAgreementOracleClient is OracleClient {
+    uint256 public hash = 0;
+    bool public license = false;
+
+    constructor (address add) OracleClient(add){}
+
+    // buyer, song, duration, totalCost, purchaseDate, expiryDate
+    function writeLicenseAgreement(address buyer, address song, uint256 duration, uint256 totalCost) public{
+        // Writing license and awaitng hash
+
+        bytes memory requestData = abi.encode(buyer, song, duration, totalCost);
+        requestDataFromOracle(1, requestData);
+    }
+
+
+    function requestLicenseStatus() public{
+        // Requesting status and receiving status
+        bytes memory requestData = abi.encode();
+        requestDataFromOracle(0, requestData);
+    }
+
+    
+    function replyDataFromOracle(uint256 requestType, uint256 requestId, bytes memory data) public override
     {
-        OracleInterface(_oracleAddr).requestData(++_requestCounter, data);
-        return _requestCounter;
+        // Decode data and segment it into receive hash or receive license
+        (string memory returnData) = abi.decode(data, (string));
+        if (requestType == 0){
+            receiveLicenseStatus(requestId,returnData);
+        } else if (requestType == 1){
+            receiveHash(requestId, returnData);
+        }
+        requestId = 0;
+    }
+     function receiveHash( uint256 requestId, string memory returnData) private{
+        // Receiving hash
+        // Call song contracts receive hash
+        
     }
 
-    function receiveDataFromOracle(uint256 requestId, bytes memory data)
-        public
-        virtual;
-}
+    function receiveLicenseStatus( uint256 requestId, string memory returnData) private{
+        // Call song contracts receive license status
 
-abstract contract Oracle is OracleInterface {
-    event request(uint256 requestId, address caller, bytes data);
-
-    address public trustedServer;
-
-    modifier trusted() {
-        require(msg.sender == trustedServer);
-        _;
+        // Call song contracts receive license 
     }
 
-    constructor(address serverAddr) {
-        trustedServer = serverAddr;
-    }
-
-    function requestData(uint256 requestId, bytes memory data) public override {
-        emit request(requestId, msg.sender, data);
-    }
-
-    function replyData(
-        uint256 requestId,
-        address caller,
-        bytes memory data
-    ) public virtual trusted {
-        OracleClient(caller).receiveDataFromOracle(requestId, data);
-    }
-}
-
-contract TemperatureOracle is Oracle {
-    constructor(address serverAddr) Oracle(serverAddr) {}
-}
-
-abstract contract TemperatureOracleClient is OracleClient {
-    constructor(address oracleAd) OracleClient(oracleAd) {}
-
-    function requestTemperatureFromOracle(
-        string memory city1,
-        string memory city2
-    ) internal returns (uint256) {
-        requestDataFromOracle(abi.encode(city1, city2));
-        return _requestCounter;
-    }
-
-    function receiveDataFromOracle(uint256 requestId, bytes memory data)
-        public
-        override
-        oracleOnly
-    {
-        (int256 temp1, int256 temp2) = abi.decode(data, (int256, int256));
-        receiveTemperatureFromOracle(requestId, temp1, temp2);
-    }
-
-    function receiveTemperatureFromOracle(
-        uint256 requestId,
-        int256 temperature1,
-        int256 temperature2
-    ) internal virtual;
-    // function receiveTemperatureFromOracle(
-    //     uint256 requestId,
-    //     int256 temperature1,
-    //     int256 temperature2
-    // ) internal pure returns (int256[] memory) {
-    //     int256[] memory temps = new int256[](3);
-    //     temps[0]=temperature1;
-    //     temps[1]=temperature2;
-    //     temps[2] = int256(requestId);
-    //     return temps;
-    // }
 }
