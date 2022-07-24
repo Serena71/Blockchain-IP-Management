@@ -26,4 +26,5 @@ contract UserApp is TemperatureOracleClient {
         temperature1 = _temperature1;
         temperature2 = _temperature2;
     }
+  
 }

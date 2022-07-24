@@ -89,4 +89,15 @@ abstract contract TemperatureOracleClient is OracleClient {
         int256 temperature1,
         int256 temperature2
     ) internal virtual;
+    // function receiveTemperatureFromOracle(
+    //     uint256 requestId,
+    //     int256 temperature1,
+    //     int256 temperature2
+    // ) internal pure returns (int256[] memory) {
+    //     int256[] memory temps = new int256[](3);
+    //     temps[0]=temperature1;
+    //     temps[1]=temperature2;
+    //     temps[2] = int256(requestId);
+    //     return temps;
+    // }
 }
