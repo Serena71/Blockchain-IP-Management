@@ -13,10 +13,11 @@ Navigate to IP-Management folder
 
 run `npm install`
 
-run `npx tsc`
+To deploy the oracle contract: `npm start`
 
-run `node build/index.js deploy oracle` to deployer oracle
+To deploy userapp contract: `npm run deploy -- [oracle-address-from-previous-step]`
 
-run `node build/index.js deploy userapp [oracle-address-from-previous-step]` to deploy userapp
+To listen to request: `npm run listen -- [oracle-address-from-previous-step]`
 
-run `node build/index.js listen oracle [oracle-address-from-previous-step]` to listen to request
+To Invoke userapp function: `npm run invoke -- [userapp-method] [userapp-address]`
+
