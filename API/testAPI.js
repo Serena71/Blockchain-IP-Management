@@ -22,8 +22,8 @@ function getData(hashcode) {
 
 function sentData() {
   const body = {
-    buyer: 'buyer2',
-    song: 'song2',
+    buyer: 'buyer3',
+    song: 'song3',
     duration: 0,
     totalCos: 100,
   };
