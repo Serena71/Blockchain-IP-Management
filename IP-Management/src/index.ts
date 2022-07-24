@@ -3,7 +3,7 @@ import { WebsocketProvider, Account } from 'web3-core';
 import { deployContract } from './deploy';
 import { handleRequestEvent } from './listen';
 import { loadCompiledSols } from './load';
-import { grabTemperature } from './dataGrabber';
+import { grabTemperature, grabData } from './dataGrabber';
 import { methodSend } from './send';
 import { Contract } from 'web3-eth-contract';
 let fs = require('fs');
@@ -110,11 +110,13 @@ if (shellArgs.length < 1) {
         console.error(err);
       }
       handleRequestEvent(contract, async (caller: String, requestId: Number, data: any) => {
+        console.log('start data grabbing');
         let cities = web3.eth.abi.decodeParameters(['string', 'string'], data);
         let city1 = cities[0];
         let city2 = cities[1];
         let temperature1 = await grabTemperature(city1);
         let temperature2 = await grabTemperature(city2);
+
         let temperatureHex1!: String;
         let temperatureHex2!: String;
         try {
@@ -136,7 +138,45 @@ if (shellArgs.length < 1) {
           contract.options.address,
           [requestId, caller, temperaturesHex]
         );
+        // console.log(receipt);
       });
     }
+  } else if (cmd0 == 'invoke') {
+    if (shellArgs.length < 4) {
+      console.error('e.g. node index.js run oracle 0x23a01...');
+      process.exit(1);
+    }
+    if (shellArgs[1] == 'userapp') {
+      let account!: Account;
+      let contract!: Contract;
+      try {
+        account = getAccount(web3, 'user');
+        let loaded = loadCompiledSols(['oracle', 'userapp']);
+        let contractAddr = shellArgs[3];
+        contract = new web3.eth.Contract(loaded.contracts['userapp']['UserApp'].abi, contractAddr, {});
+      } catch (err) {
+        console.error('error listening oracle contract');
+        console.error(err);
+      }
+      if (shellArgs[2] == 'getTemperature') {
+        let receipt = await methodSend(
+          web3,
+          account,
+          contract.options.jsonInterface,
+          'getTemperature(string,string)',
+          contract.options.address,
+          ['Sydney', 'Melbourne']
+        );
+        // console.log(receipt);
+        // let receipt1 = await contract.methods.temperature1().call();
+        // let receipt2 = await contract.methods.temperature2().call();
+        // console.log('Sydnet: ' + receipt1 + ' ' + 'Melbourne: ' + receipt2);
+      } else if (shellArgs[2] == 'viewTemperature') {
+        let receipt1 = await contract.methods.temperature1().call();
+        let receipt2 = await contract.methods.temperature2().call();
+        console.log('Sydnet: ' + receipt1 + ' ' + 'Melbourne: ' + receipt2);
+      }
+    }
+    web3Provider.disconnect(1000, 'Normal Closure');
   }
 })();
