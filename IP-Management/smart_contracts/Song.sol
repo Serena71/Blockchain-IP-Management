@@ -21,8 +21,6 @@ contract Song is LicenseAgreementOracleClient{
         uint contribution;
     }
     mapping(uint => artist) artist_map;
- 
-
 
 
 
@@ -35,7 +33,8 @@ contract Song is LicenseAgreementOracleClient{
     }
     
     // Function to add artist
-    function songAddArtist(uint _id,string memory _name, address _artist_address,string memory  _role, uint _contribution) external{
+    function addArtist(uint _id,string memory _name, address _artist_address,string memory  _role, uint _contribution) external{
+        require(msg.sender == song_manager, "This function can only be accessed by song manager");
         number_of_artists++;
         artist memory temp_artist;
         temp_artist.id = _id;
@@ -49,14 +48,19 @@ contract Song is LicenseAgreementOracleClient{
         artist_list.push(_name);
     }
 
-    // Interface function to get the song price
+    // Function to get the song price
     function getSongPrice() public view returns(uint) {
         return price;
     }
 
-    // Interface function to get the song artist details
+    // Function to get the song artist details
     function getArtistList () public view returns(string[] memory) {
          return artist_list;
+    }
+
+     // function to return artist details if given id
+    function getArtistDetails(uint _id) external view returns (artist memory) {
+        return artist_map[_id];
     }
 
     function purchaseSong(uint256 _duration) public{
@@ -79,18 +83,8 @@ contract Song is LicenseAgreementOracleClient{
         license_status = _license_status;
     }
 
-    // function to return artist details if given id
-    function songArtistDetails(uint _id) external view returns (artist memory) {
-        return artist_map[_id];
-    }
+   
 
-    // function to return song price
-    function returnPrice() external view returns(uint){
-        return price;
-    }
 
-    // function to return artist list
-    function returnArtistList() external view returns(string[] memory){
-        return artist_list;
-    }
+   
 }
