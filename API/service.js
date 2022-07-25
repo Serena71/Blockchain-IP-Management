@@ -44,12 +44,12 @@ const addLicense = (buyer, song, duration, totalCost) =>
     const now = new Date();
 
     const agreementData = {
-      buyer,
-      song,
+      buyer: buyer,
+      song: song,
       purchaseDate: now.toDateString(),
-      duration,
+      duration: duration,
       expiryDate: calculateExpiryDate(now, duration),
-      totalCost,
+      totalCost: totalCost,
     };
 
     let mj = new MerkleJson();

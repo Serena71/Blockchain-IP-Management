@@ -43,7 +43,6 @@ app.get(
 app.post(
   '/addLicense',
   catchErrors(async (req, res) => {
-    console.log('writing');
     const { buyer, song, duration, totalCost } = req.body;
     return res.status(200).json(await service.addLicense(buyer, song, duration, totalCost));
   })

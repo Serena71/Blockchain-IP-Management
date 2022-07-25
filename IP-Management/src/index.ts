@@ -76,7 +76,7 @@ if (shellArgs.length < 1) {
       } else {
         let oracleAddr = shellArgs[2];
         try {
-          let account = getAccount(web3, 'user');
+          let account = getAccount(web3, 'trusted_server');
           let loaded = loadCompiledSols(['oracle', 'userapp']);
           let contract = await deployContract(
             web3!,
@@ -121,19 +121,15 @@ if (shellArgs.length < 1) {
           hex = web3.eth.abi.encodeParameters(['string'], [status]);
           console.log('the license status is ' + status);
         } else if (requestType == 1) {
-          console.log(data);
           // pass licnese info, write into database, and get hashcode
           let params = web3.eth.abi.decodeParameters(['address', 'address', 'uint256', 'uint256'], data);
-          console.log(params);
           const body = {
             buyer: params[0],
             song: params[1],
             duration: params[2],
             totalCost: params[3],
           };
-          console.log(body);
-          // let hashcode = await grabData('post', {: body });
-          let hashcode = 'somehash';
+          let hashcode = await grabData('post', body);
           hex = web3.eth.abi.encodeParameters(['string'], [hashcode]);
           console.log('the license hashcode is ' + hashcode);
         }
@@ -150,41 +146,71 @@ if (shellArgs.length < 1) {
       });
     }
   } else if (cmd0 == 'invoke') {
-    if (shellArgs.length < 4) {
-      console.error('e.g. node index.js run oracle 0x23a01...');
-      process.exit(1);
-    }
     if (shellArgs[1] == 'userapp') {
+      if (shellArgs.length < 4) {
+        console.error('e.g. node index.js run oracle 0x23a01...');
+        process.exit(1);
+      }
       let account!: Account;
       let contract!: Contract;
       try {
         account = getAccount(web3, 'user');
         let loaded = loadCompiledSols(['oracle', 'userapp']);
-        let contractAddr = shellArgs[3];
+        let contractAddr = shellArgs[2];
         contract = new web3.eth.Contract(loaded.contracts['userapp']['UserApp'].abi, contractAddr, {});
       } catch (err) {
-        console.error('error listening oracle contract');
+        console.error('error listening userapp contract');
         console.error(err);
       }
-      if (shellArgs[2] == 'getTemperature') {
-        let receipt = await methodSend(
+      if (shellArgs[3] == 'searchSong') {
+        const id = await contract.methods.get_song_id(shellArgs[4]).call();
+        const address = await contract.methods.address_map(id).call();
+        console.log('Song address for ' + shellArgs[4] + ' is ' + address);
+      }
+    } else if (shellArgs[1] == 'song') {
+      if (shellArgs.length < 4) {
+        console.error('e.g. node index.js run oracle 0x23a01...');
+        process.exit(1);
+      }
+      let account!: Account;
+      let contract!: Contract;
+      try {
+        account = getAccount(web3, 'user');
+        let loaded = loadCompiledSols(['oracle', 'Song']);
+        let contractAddr = shellArgs[2];
+        contract = new web3.eth.Contract(loaded.contracts['Song']['Song'].abi, contractAddr, {});
+      } catch (err) {
+        console.error('error listening Song contract');
+        console.error(err);
+      }
+      //ERROR
+      if (shellArgs[3] == 'requestStatus') {
+        const receipt = await methodSend(
           web3,
           account,
           contract.options.jsonInterface,
-          'getTemperature(string,string)',
+          'getLicenseStatus(string)',
           contract.options.address,
-          ['Sydney', 'Melbourne']
+          [shellArgs[4]]
         );
-        // console.log(receipt);
-        // let receipt1 = await contract.methods.temperature1().call();
-        // let receipt2 = await contract.methods.temperature2().call();
-        // console.log('Sydnet: ' + receipt1 + ' ' + 'Melbourne: ' + receipt2);
-      } else if (shellArgs[2] == 'viewTemperature') {
-        let receipt1 = await contract.methods.temperature1().call();
-        let receipt2 = await contract.methods.temperature2().call();
-        console.log('Sydnet: ' + receipt1 + ' ' + 'Melbourne: ' + receipt2);
+      } else if (shellArgs[3] == 'receiveStatus') {
+        const status = await contract.methods.license_status().call();
+        console.log(status);
+      } else if (shellArgs[3] == 'purchase') {
+        const receipt = await methodSend(
+          web3,
+          account,
+          contract.options.jsonInterface,
+          'purchaseSong(uint256)',
+          contract.options.address,
+          [shellArgs[4]]
+        );
+      } else if (shellArgs[3] == 'receiveHashcode') {
+        const hashcode = await contract.methods.license_hashcode().call();
+        console.log(hashcode);
       }
     }
+
     web3Provider.disconnect(1000, 'Normal Closure');
   }
 })();

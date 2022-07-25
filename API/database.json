@@ -1,62 +1,26 @@
 {
-  "123": {
-    "buyer": "buyer2",
-    "song": "song2",
-    "purchaseDate": "Wed Jun 22 2022",
-    "duration": 1,
-    "expiryDate": "Fri Jul 22 2022"
+  "50c56a550c447d3bc4509feac08428ad": {
+    "buyer": "0x50e3cea551177979C1cDf2AeCa9d3C2E2709D1Db",
+    "song": "0x45e5a005458FCC36eB78E8b96A8B03f633aea9b9",
+    "purchaseDate": "Tue Jul 26 2022",
+    "duration": "25",
+    "expiryDate": "Mon Feb 26 2074",
+    "totalCost": "250"
   },
-  "124": {
-    "buyer": "buyer2",
-    "song": "song2",
-    "purchaseDate": "Fri Jul 22 2022",
-    "duration": 12,
-    "expiryDate": "Sat Jul 22 2023"
+  "e0d00cf5e2313335b1a55106694418c8": {
+    "buyer": "0x50e3cea551177979C1cDf2AeCa9d3C2E2709D1Db",
+    "song": "0x45e5a005458FCC36eB78E8b96A8B03f633aea9b9",
+    "purchaseDate": "Tue Jul 26 2022",
+    "duration": "30",
+    "expiryDate": "Thu Jul 26 2074",
+    "totalCost": "300"
   },
-  "125": {
-    "buyer": "buyer2",
-    "song": "song2",
-    "purchaseDate": "Fri Jul 22 2022",
-    "duration": 0,
-    "expiryDate": "Fri Jul 22 2022"
-  },
-  "126": {
-    "buyer": "buyer2",
-    "song": "song2",
-    "purchaseDate": "Fri Jul 22 2022",
-    "duration": 0,
-    "expiryDate": "Fri Jul 22 2022"
-  },
-  "127": {
-    "buyer": "buyer2",
-    "song": "song2",
-    "purchaseDate": "Sun Jul 24 2022",
-    "duration": 0,
-    "expiryDate": "Sun Jul 24 2022"
-  },
-  "128": {
-    "purchaseDate": "Sun Jul 24 2022",
-    "expiryDate": "Invalid Date"
-  },
-  "129": {
-    "buyer": "buyer2",
-    "song": "song2",
-    "purchaseDate": "Sun Jul 24 2022",
-    "duration": 0,
-    "expiryDate": "Sun Jul 24 2022"
-  },
-  "0d495106bb1445e29ca563d15d9be9d1": {
-    "buyer": "buyer2",
-    "song": "song2",
-    "purchaseDate": "Sun Jul 24 2022",
-    "duration": 0,
-    "expiryDate": "Sun Jul 24 2022"
-  },
-  "b131ace35d6eb0fb7b7eeb736bc14355": {
-    "buyer": "buyer3",
-    "song": "song3",
-    "purchaseDate": "Sun Jul 24 2022",
-    "duration": 0,
-    "expiryDate": "Sun Jul 24 2022"
+  "c3e7f5bce0201666a17217c93d12a795": {
+    "buyer": "0xc6e23EdbcD8184682001ABc2B81257e871e89045",
+    "song": "0x45e5a005458FCC36eB78E8b96A8B03f633aea9b9",
+    "purchaseDate": "Tue Jul 26 2022",
+    "duration": "30",
+    "expiryDate": "Thu Jul 26 2074",
+    "totalCost": "300"
   }
 }

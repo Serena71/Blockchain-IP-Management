@@ -10,9 +10,7 @@ export function handleRequestEvent(contract: Contract, grabData: Function) {
       let caller = event.returnValues.caller;
       let requestId = event.returnValues.requestId;
       let data = event.returnValues.data;
-      if (requestType == 0) {
-        grabData(requestType, caller, requestId, data);
-      }
+      grabData(requestType, caller, requestId, data);
     })
     .on('error', function (error: any, receipt: any) {
       console.log(error);
