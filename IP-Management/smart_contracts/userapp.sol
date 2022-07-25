@@ -4,7 +4,7 @@ pragma solidity >=0.7.0 <0.9.0;
 
 import "./oracle.sol";
 //Import utility packages
-import "@openzeppelin/contracts/utils/Strings.sol";
+// import "@openzeppelin/contracts/utils/Strings.sol";
 //Importing the song format contract
 import "./Song.sol";
 
@@ -26,14 +26,15 @@ contract UserApp is LicenseAgreementOracleClient {
     string public license_status;
 
     constructor(address oracleAd) LicenseAgreementOracleClient(oracleAd) {
-        manager = msg.sender
+        manager = msg.sender;
     }
 
     // Function to create the song
     function addSong(string memory song_name, address song_manager, uint price) public restricted {
         string memory temp;
-        temp = Strings.toString(block.number);
-        temp = string(bytes.concat(bytes(song_name),bytes(temp)));
+        temp = "123";
+        // temp = Strings.toString(block.number);
+        temp = string(bytes.concat(bytes(song_name), bytes(temp)));
         copy_right_id = sha256(abi.encodePacked(temp));
         Song new_song = new Song(song_name, song_manager,copy_right_id,price);
         address_container = address(new_song);
@@ -73,26 +74,27 @@ contract UserApp is LicenseAgreementOracleClient {
     }
 
     // Purchasing the song
-    function purchaseSong(bytes32 _copy_right_id,uint _duration,uint _amount, string purchase_key) public view{
+    function purchaseSong(bytes32 _copy_right_id,uint _duration, uint _amount, string memory purchase_key) public {
         uint expected_amount;
         uint duration = _duration;
         address buyer = msg.sender;
         address song_address = address_map[_copy_right_id];
-        uint total_cost;
+        uint total_cost = _amount;
         expected_amount = getSongPrice(_copy_right_id) * duration;
         require(total_cost == expected_amount, "The amount you transferred does not match with the actual price");
         writeLicenseAgreement(buyer, song_address, duration, total_cost);
+        
     }
 
-    function receiveLicenceHash(string _license_hash) external{
+    function receiveLicenceHash(string memory _license_hash) external{
         license_hash = _license_hash;
     }
 
-    function getLicenseStatus(string _license_hash) public view returns(string) {
-        requestLicenseStatus(string _license_hash);
+    function getLicenseStatus(string memory _license_hash) public returns(string memory) {
+        requestLicenseStatus(_license_hash);
     }
 
-    function fReceiveLicenceStatus(string _license_status) external {
+    function fReceiveLicenceStatus(string memory _license_status) external {
         license_status = _license_status;
     }
 
