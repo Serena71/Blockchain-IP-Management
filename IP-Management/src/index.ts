@@ -60,8 +60,8 @@ if (shellArgs.length < 1) {
         let contract = await deployContract(
           web3!,
           account,
-          loaded.contracts['oracle']['TemperatureOracle'].abi,
-          loaded.contracts['oracle']['TemperatureOracle'].evm.bytecode.object,
+          loaded.contracts['oracle']['Oracle'].abi,
+          loaded.contracts['oracle']['Oracle'].evm.bytecode.object,
           [account.address]
         );
         console.log('oracle contract address: ' + contract.options.address);
