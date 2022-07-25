@@ -12,6 +12,7 @@ abstract contract OracleClient {
     address oracleAddress;
 
     constructor (address add) {
+        
         oracleAddress = add;
         requestCounter = 0;
     }
