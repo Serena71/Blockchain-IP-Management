@@ -23,7 +23,7 @@ export async function grabData(method: string, body: object) {
       });
   } else if (method == 'post') {
     return axios
-      .post('http://localhost:5050/addLicense', { params: body })
+      .post('http://localhost:5050/addLicense', body)
       .then(async function (response: any) {
         return response?.data;
       })

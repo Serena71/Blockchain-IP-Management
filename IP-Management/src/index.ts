@@ -6,6 +6,7 @@ import { loadCompiledSols } from './load';
 import { grabTemperature, grabData } from './dataGrabber';
 import { methodSend } from './send';
 import { Contract } from 'web3-eth-contract';
+import { Console } from 'console';
 let fs = require('fs');
 
 function initializeProvider(): WebsocketProvider {
@@ -109,34 +110,41 @@ if (shellArgs.length < 1) {
         console.error('error listening oracle contract');
         console.error(err);
       }
-      handleRequestEvent(contract, async (caller: String, requestId: Number, data: any) => {
+      handleRequestEvent(contract, async (requestType: Number, caller: String, requestId: Number, data: any) => {
         console.log('start data grabbing');
-        let cities = web3.eth.abi.decodeParameters(['string', 'string'], data);
-        let city1 = cities[0];
-        let city2 = cities[1];
-        let temperature1 = await grabTemperature(city1);
-        let temperature2 = await grabTemperature(city2);
+        let hex;
+        if (requestType == 0) {
+          // pass hashcode, get status of license
+          let param = web3.eth.abi.decodeParameters(['string'], data);
 
-        let temperatureHex1!: String;
-        let temperatureHex2!: String;
-        try {
-          temperatureHex1 = web3.utils.toTwosComplement(temperature1);
-          temperatureHex2 = web3.utils.toTwosComplement(temperature2);
-        } catch (e) {
-          console.error('invalid temperature grabbed');
-          console.error(e);
-          return;
+          let status = await grabData('get', { hashcode: param[0] });
+          hex = web3.eth.abi.encodeParameters(['string'], [status]);
+          console.log('the license status is ' + status);
+        } else if (requestType == 1) {
+          console.log(data);
+          // pass licnese info, write into database, and get hashcode
+          let params = web3.eth.abi.decodeParameters(['address', 'address', 'uint256', 'uint256'], data);
+          console.log(params);
+          const body = {
+            buyer: params[0],
+            song: params[1],
+            duration: params[2],
+            totalCost: params[3],
+          };
+          console.log(body);
+          // let hashcode = await grabData('post', {: body });
+          let hashcode = 'somehash';
+          hex = web3.eth.abi.encodeParameters(['string'], [hashcode]);
+          console.log('the license hashcode is ' + hashcode);
         }
-        let temperaturesHex = web3.eth.abi.encodeParameters(['uint256', 'uint256'], [temperatureHex1, temperatureHex2]);
-        console.log('the temperature in ' + city1 + ' is ' + temperature1);
-        console.log('the temperature in ' + city2 + ' is ' + temperature2);
+
         let receipt = await methodSend(
           web3,
           account,
           contract.options.jsonInterface,
-          'replyData(uint256,address,bytes)',
+          'replyData(uint256,uint256,address,bytes)',
           contract.options.address,
-          [requestId, caller, temperaturesHex]
+          [requestType, requestId, caller, hex]
         );
         // console.log(receipt);
       });

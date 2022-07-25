@@ -25,12 +25,12 @@ function sentData() {
     buyer: 'buyer3',
     song: 'song3',
     duration: 0,
-    totalCos: 100,
+    totalCost: 100,
   };
   testAPI('post', body)
     .then((data) => console.log(data))
     .catch((e) => console.error(e));
 }
 
-getData(123);
-sentData();
+getData('0d495106bb1445e29ca563d15d9be9d1');
+// sentData();

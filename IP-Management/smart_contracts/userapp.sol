@@ -4,14 +4,16 @@ pragma solidity >=0.7.0 <0.9.0;
 
 import "./oracle.sol";
 //Import utility packages
-import "@openzeppelin/contracts/utils/Strings.sol";
+// import "@openzeppelin/contracts/utils/Strings.sol";
 //Importing the song format contract
 import "./Song.sol";
+import "./oracle.sol";
 
-contract UserApp is LicenseAgreementOracleClient {
+contract UserApp {
+    address oracle;
     address manager;
     address address_container;
-    mapping (bytes32 => address) address_map;
+    mapping (bytes32 => address) public address_map;
     bytes32  copy_right_id;
     mapping (bytes32 => address) public song_manager_map;
     mapping (string => bytes32) public get_song_id;
@@ -23,23 +25,26 @@ contract UserApp is LicenseAgreementOracleClient {
         string role;
         uint contribution;
     }
-    string public license_status;
+    // string public license_status;
 
-    constructor(address oracleAd) LicenseAgreementOracleClient(oracleAd) {
-        manager = msg.sender
+    constructor(address _oracle) {
+        manager = msg.sender;
+        oracle = _oracle;
     }
 
     // Function to create the song
-    function addSong(string memory song_name, address song_manager, uint price) public restricted {
+    function addSong(string memory song_name, address song_manager, uint price) public restricted returns(address songAddress){
         string memory temp;
-        temp = Strings.toString(block.number);
-        temp = string(bytes.concat(bytes(song_name),bytes(temp)));
+        // temp = Strings.toString(block.number);
+        // temp = string(bytes.concat(bytes(song_name),bytes(temp)));
+        temp = "ranodm data";
         copy_right_id = sha256(abi.encodePacked(temp));
-        Song new_song = new Song(song_name, song_manager,copy_right_id,price);
+        Song new_song = new Song(song_name, song_manager,copy_right_id,price, oracle);
         address_container = address(new_song);
         address_map[copy_right_id] = address_container;
         song_manager_map[copy_right_id] = song_manager;
         get_song_id[song_name] = copy_right_id;
+        return address_container;
     }
 
 
@@ -60,41 +65,41 @@ contract UserApp is LicenseAgreementOracleClient {
         return fa;
     }
 
-    // Interface function to get the song price
-    function getSongPrice(bytes32 _copy_right_id) public view returns(uint) {
-        uint song_price = Song(address_map[_copy_right_id]).returnPrice();
-        return song_price;
-    }
+    // // Interface function to get the song price
+    // function getSongPrice(bytes32 _copy_right_id) public view returns(uint) {
+    //     uint song_price = Song(address_map[_copy_right_id]).returnPrice();
+    //     return song_price;
+    // }
 
-    // Interface function to get the song artist details
-    function getArtistList (bytes32 _copy_right_id) public view returns(string[] memory) {
-         string[] memory artist_list = Song(address_map[_copy_right_id]).returnArtistList();
-         return artist_list;
-    }
+    // // Interface function to get the song artist details
+    // function getArtistList (bytes32  _copy_right_id) public view returns(string[] memory) {
+    //      string[] memory artist_list = Song(address_map[_copy_right_id]).returnArtistList();
+    //      return artist_list;
+    // }
 
     // Purchasing the song
-    function purchaseSong(bytes32 _copy_right_id,uint _duration,uint _amount, string purchase_key) public view{
-        uint expected_amount;
-        uint duration = _duration;
-        address buyer = msg.sender;
-        address song_address = address_map[_copy_right_id];
-        uint total_cost;
-        expected_amount = getSongPrice(_copy_right_id) * duration;
-        require(total_cost == expected_amount, "The amount you transferred does not match with the actual price");
-        writeLicenseAgreement(buyer, song_address, duration, total_cost);
-    }
+    // function purchaseSong(bytes32 _copy_right_id, uint _duration,uint _amount, string memory purchase_key) public{
+    //     uint expected_amount;
+    //     uint duration = _duration;
+    //     address buyer = msg.sender;
+    //     address song_address = address_map[_copy_right_id];
+    //     uint total_cost;
+    //     expected_amount = getSongPrice(_copy_right_id) * duration;
+    //     require(total_cost == expected_amount, "The amount you transferred does not match with the actual price");
+    //     writeLicenseAgreement(buyer, song_address, duration, total_cost);
+    // }
 
-    function receiveLicenceHash(string _license_hash) external{
-        license_hash = _license_hash;
-    }
+    // function receiveLicenceHash(string memory _license_hash) external{
+    //     license_hash = _license_hash;
+    // }
 
-    function getLicenseStatus(string _license_hash) public view returns(string) {
-        requestLicenseStatus(string _license_hash);
-    }
+    // function getLicenseStatus(string memory _license_hash) public returns(string memory) {
+    //     requestLicenseStatus(_license_hash);
+    // }
 
-    function fReceiveLicenceStatus(string _license_status) external {
-        license_status = _license_status;
-    }
+    // function fReceiveLicenceStatus(string memory _license_status) external {
+    //     license_status = _license_status;
+    // }
 
     // Access restriction to the AddSong function
     modifier restricted(){

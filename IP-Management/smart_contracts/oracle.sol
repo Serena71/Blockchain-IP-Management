@@ -35,19 +35,19 @@ contract Oracle is OracleInterface{
         emit request(requestType, requestId, msg.sender, data);
     }
 
-    function replyData(uint256 requestType, uint256 requestId, bytes memory data) public {
-        OracleClient(trustedServerAddress).replyDataFromOracle(requestType, requestId, data);
+    function replyData(uint256 requestType, uint256 requestId, address caller, bytes memory data) public {
+        OracleClient(caller).replyDataFromOracle(requestType, requestId, data);
     }
 }
 
 abstract contract LicenseAgreementOracleClient is OracleClient {
-    string public hash = "";
-    bool public license = false;
+    string public license_hashcode = "";
+    string public license_status = "";
 
     constructor (address add) OracleClient(add){}
 
     // buyer, song, duration, totalCost, purchaseDate, expiryDate
-    function writeLicenseAgreement(address buyer, address song, uint256 duration, uint256 totalCost) private{
+    function writeLicenseAgreement(address buyer, address song, uint256 duration, uint256 totalCost) internal{
         // Writing license and awaitng hash
 
         bytes memory requestData = abi.encode(buyer, song, duration, totalCost);
@@ -55,7 +55,7 @@ abstract contract LicenseAgreementOracleClient is OracleClient {
     }
 
 
-    function requestLicenseStatus(string memory data) public{
+    function requestLicenseStatus(string memory data) internal{
         // Requesting status and receiving status
         bytes memory requestData = abi.encode(data);
         requestDataFromOracle(0, requestData);
@@ -73,15 +73,15 @@ abstract contract LicenseAgreementOracleClient is OracleClient {
         }
     }
 
-    function receiveHash(uint256 requestId, string memory returnData) private{
+    function receiveHash(uint256 requestId, string memory returnData) internal virtual{
         // Receiving hash
 
         // Call song contracts receive hash
-        hash = returnData;
+
         
     }
 
-    function receiveLicenseStatus( uint256 requestId, string memory returnData) private{
+    function receiveLicenseStatus( uint256 requestId, string memory returnData) internal virtual{
         // Call song contracts receive license status
 
         // Call song contracts receive license 

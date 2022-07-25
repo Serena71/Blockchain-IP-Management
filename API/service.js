@@ -69,7 +69,7 @@ const checkExpiry = (hash) =>
   LicenseLock((resolve, reject) => {
     const expiryDate = new Date(licenses[hash].expiryDate);
     const now = new Date(new Date().toDateString());
-    resolve(now > expiryDate);
+    resolve(now > expiryDate ? 'expired' : 'valid');
   });
 
 module.exports = { save, addLicense, checkExpiry };
