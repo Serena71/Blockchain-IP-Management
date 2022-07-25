@@ -47,7 +47,7 @@ abstract contract LicenseAgreementOracleClient is OracleClient {
     constructor (address add) OracleClient(add){}
 
     // buyer, song, duration, totalCost, purchaseDate, expiryDate
-    function writeLicenseAgreement(address buyer, address song, uint256 duration, uint256 totalCost) public{
+    function writeLicenseAgreement(address buyer, address song, uint256 duration, uint256 totalCost) private{
         // Writing license and awaitng hash
 
         bytes memory requestData = abi.encode(buyer, song, duration, totalCost);
