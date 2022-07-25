@@ -3,10 +3,9 @@ import { WebsocketProvider, Account } from 'web3-core';
 import { deployContract } from './deploy';
 import { handleRequestEvent } from './listen';
 import { loadCompiledSols } from './load';
-import { grabTemperature, grabData } from './dataGrabber';
+import { grabData } from './dataGrabber';
 import { methodSend } from './send';
 import { Contract } from 'web3-eth-contract';
-import { Console } from 'console';
 let fs = require('fs');
 
 function initializeProvider(): WebsocketProvider {
@@ -146,9 +145,9 @@ if (shellArgs.length < 1) {
       });
     }
   } else if (cmd0 == 'invoke') {
-    if (shellArgs[1] == 'userapp') {
+    if (shellArgs[2] == 'search') {
       if (shellArgs.length < 4) {
-        console.error('e.g. node index.js run oracle 0x23a01...');
+        console.error('Please specify the contract address');
         process.exit(1);
       }
       let account!: Account;
@@ -156,17 +155,14 @@ if (shellArgs.length < 1) {
       try {
         account = getAccount(web3, 'user');
         let loaded = loadCompiledSols(['oracle', 'userapp']);
-        let contractAddr = shellArgs[2];
+        let contractAddr = shellArgs[1];
         contract = new web3.eth.Contract(loaded.contracts['userapp']['UserApp'].abi, contractAddr, {});
       } catch (err) {
         console.error('error listening userapp contract');
         console.error(err);
       }
-      if (shellArgs[3] == 'searchSong') {
-        const id = await contract.methods.get_song_id(shellArgs[4]).call();
-        const address = await contract.methods.address_map(id).call();
-        console.log('Song address for ' + shellArgs[4] + ' is ' + address);
-      }
+      const address = await contract.methods.searchSong(shellArgs[3]).call();
+      console.log('Song address for ' + shellArgs[4] + ' is ' + address);
     } else if (shellArgs[1] == 'song') {
       if (shellArgs.length < 4) {
         console.error('e.g. node index.js run oracle 0x23a01...');
