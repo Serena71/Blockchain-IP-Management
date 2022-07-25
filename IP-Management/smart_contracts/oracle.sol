@@ -13,6 +13,7 @@ abstract contract OracleClient {
 
     constructor (address add) {
         oracleAddress = add;
+        requestCounter = 0;
     }
 
     function requestDataFromOracle(uint256 requestType, bytes memory data) public {
@@ -40,7 +41,7 @@ contract Oracle is OracleInterface{
 }
 
 abstract contract LicenseAgreementOracleClient is OracleClient {
-    uint256 public hash = 0;
+    string public hash = "";
     bool public license = false;
 
     constructor (address add) OracleClient(add){}
@@ -54,9 +55,9 @@ abstract contract LicenseAgreementOracleClient is OracleClient {
     }
 
 
-    function requestLicenseStatus() public{
+    function requestLicenseStatus(string memory data) public{
         // Requesting status and receiving status
-        bytes memory requestData = abi.encode();
+        bytes memory requestData = abi.encode(data);
         requestDataFromOracle(0, requestData);
     }
 
@@ -66,15 +67,17 @@ abstract contract LicenseAgreementOracleClient is OracleClient {
         // Decode data and segment it into receive hash or receive license
         (string memory returnData) = abi.decode(data, (string));
         if (requestType == 0){
-            receiveLicenseStatus(requestId,returnData);
+            receiveLicenseStatus(requestId, returnData);
         } else if (requestType == 1){
             receiveHash(requestId, returnData);
         }
-        requestId = 0;
     }
-     function receiveHash( uint256 requestId, string memory returnData) private{
+
+    function receiveHash(uint256 requestId, string memory returnData) private{
         // Receiving hash
+
         // Call song contracts receive hash
+        hash = returnData;
         
     }
 

@@ -60,8 +60,8 @@ if (shellArgs.length < 1) {
         let contract = await deployContract(
           web3!,
           account,
-          loaded.contracts['oracle']['TemperatureOracle'].abi,
-          loaded.contracts['oracle']['TemperatureOracle'].evm.bytecode.object,
+          loaded.contracts['oracle']['Oracle'].abi,
+          loaded.contracts['oracle']['Oracle'].evm.bytecode.object,
           [account.address]
         );
         console.log('oracle contract address: ' + contract.options.address);
@@ -104,7 +104,7 @@ if (shellArgs.length < 1) {
         account = getAccount(web3, 'trusted_server');
         let loaded = loadCompiledSols(['oracle']);
         let contractAddr = shellArgs[2];
-        contract = new web3.eth.Contract(loaded.contracts['oracle']['TemperatureOracle'].abi, contractAddr, {});
+        contract = new web3.eth.Contract(loaded.contracts['oracle']['Oracle'].abi, contractAddr, {});
       } catch (err) {
         console.error('error listening oracle contract');
         console.error(err);
