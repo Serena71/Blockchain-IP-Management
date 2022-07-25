@@ -183,7 +183,6 @@ if (shellArgs.length < 1) {
         console.error('error listening Song contract');
         console.error(err);
       }
-      //ERROR
       if (shellArgs[3] == 'requestStatus') {
         const receipt = await methodSend(
           web3,
