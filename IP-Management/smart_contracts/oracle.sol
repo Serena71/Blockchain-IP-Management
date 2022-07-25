@@ -40,13 +40,13 @@ contract Oracle is OracleInterface{
 }
 
 abstract contract LicenseAgreementOracleClient is OracleClient {
-    uint256 public hash = 0;
-    bool public license = false;
+    // uint256 public hash = 0;
+    // bool public license = false;
 
     constructor (address add) OracleClient(add){}
 
     // buyer, song, duration, totalCost, purchaseDate, expiryDate
-    function writeLicenseAgreement(address buyer, address song, uint256 duration, uint256 totalCost) public{
+    function writeLicenseAgreement(address buyer, address song, uint256 duration, uint256 totalCost) private{
         // Writing license and awaitng hash
 
         bytes memory requestData = abi.encode(buyer, song, duration, totalCost);
@@ -54,7 +54,7 @@ abstract contract LicenseAgreementOracleClient is OracleClient {
     }
 
 
-    function requestLicenseStatus() public{
+    function requestLicenseStatus() private{
         // Requesting status and receiving status
         bytes memory requestData = abi.encode();
         requestDataFromOracle(0, requestData);
