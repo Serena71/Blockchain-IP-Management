@@ -104,7 +104,7 @@ if (shellArgs.length < 1) {
         account = getAccount(web3, 'trusted_server');
         let loaded = loadCompiledSols(['oracle']);
         let contractAddr = shellArgs[2];
-        contract = new web3.eth.Contract(loaded.contracts['oracle']['TemperatureOracle'].abi, contractAddr, {});
+        contract = new web3.eth.Contract(loaded.contracts['oracle']['Oracle'].abi, contractAddr, {});
       } catch (err) {
         console.error('error listening oracle contract');
         console.error(err);
