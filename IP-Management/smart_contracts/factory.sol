@@ -2,14 +2,13 @@
 
 pragma solidity >=0.7.0 <0.9.0;
 
-import "./oracle.sol";
 //Import utility packages
 // import "@openzeppelin/contracts/utils/Strings.sol";
 //Importing the song format contract
-import "./Song.sol";
+import "./song.sol";
 import "./oracle.sol";
 
-contract UserApp {
+contract Factory {
     address oracle;
     address manager;
     address address_container;
@@ -26,7 +25,7 @@ contract UserApp {
 
     // Access restriction to the AddSong function
     modifier restricted(){
-        require(msg.sender == manager, "New Song can only be deployed by the authorised node");
+        require(msg.sender == manager, "New song can only be deployed by the authorised node");
         _;
     }
 

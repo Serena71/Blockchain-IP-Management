@@ -16,11 +16,11 @@ run `npm install`
 
 To deploy the oracle contract: `npm start`
 
-To deploy userapp contract: `npm run deploy [oracle-address-from-previous-step]`
+To deploy factory contract: `npm run deploy [oracle-address-from-previous-step]`
 
 To listen to request: `npm run listen [oracle-address-from-previous-step]`
 
-To get address of an deployed Song oracle: `npm run invoke [userapp-address] search [sone title]`
+To get address of an deployed song oracle: `npm run invoke [factory-address] search [sone title]`
 
 To request a license purchase: `npm run invoke song [song-address] purchase [duration]`
 

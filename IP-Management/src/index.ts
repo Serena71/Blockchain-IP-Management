@@ -69,22 +69,22 @@ if (shellArgs.length < 1) {
         console.error('error deploying contract');
         console.error(err);
       }
-    } else if (shellArgs[1] == 'userapp') {
+    } else if (shellArgs[1] == 'factory') {
       if (shellArgs.length <= 2) {
         console.error('need to specify oracle address');
       } else {
         let oracleAddr = shellArgs[2];
         try {
           let account = getAccount(web3, 'trusted_server');
-          let loaded = loadCompiledSols(['oracle', 'userapp']);
+          let loaded = loadCompiledSols(['oracle', 'factory']);
           let contract = await deployContract(
             web3!,
             account,
-            loaded.contracts['userapp']['UserApp'].abi,
-            loaded.contracts['userapp']['UserApp'].evm.bytecode.object,
+            loaded.contracts['factory']['Factory'].abi,
+            loaded.contracts['factory']['Factory'].evm.bytecode.object,
             [oracleAddr]
           );
-          console.log('user app contract address: ' + contract.options.address);
+          console.log('factory contract address: ' + contract.options.address);
         } catch (err) {
           console.error('error deploying contract');
           console.error(err);
@@ -154,11 +154,11 @@ if (shellArgs.length < 1) {
       let contract!: Contract;
       try {
         account = getAccount(web3, 'user');
-        let loaded = loadCompiledSols(['oracle', 'userapp']);
+        let loaded = loadCompiledSols(['oracle', 'factory']);
         let contractAddr = shellArgs[1];
-        contract = new web3.eth.Contract(loaded.contracts['userapp']['UserApp'].abi, contractAddr, {});
+        contract = new web3.eth.Contract(loaded.contracts['factory']['Factory'].abi, contractAddr, {});
       } catch (err) {
-        console.error('error listening userapp contract');
+        console.error('error listening factory contract');
         console.error(err);
       }
       const address = await contract.methods.searchSong(shellArgs[3]).call();
@@ -172,11 +172,11 @@ if (shellArgs.length < 1) {
       let contract!: Contract;
       try {
         account = getAccount(web3, 'user');
-        let loaded = loadCompiledSols(['oracle', 'Song']);
+        let loaded = loadCompiledSols(['oracle', 'song']);
         let contractAddr = shellArgs[2];
-        contract = new web3.eth.Contract(loaded.contracts['Song']['Song'].abi, contractAddr, {});
+        contract = new web3.eth.Contract(loaded.contracts['song']['Song'].abi, contractAddr, {});
       } catch (err) {
-        console.error('error listening Song contract');
+        console.error('error listening song contract');
         console.error(err);
       }
       if (shellArgs[3] == 'requestStatus') {
