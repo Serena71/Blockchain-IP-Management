@@ -42,8 +42,9 @@ const calculateExpiryDate = (purchaseDate, duration) => {
 
 const addLicense = (buyer, song, duration, totalCost) =>
   LicenseLock((resolve, reject) => {
-    const now = new Date();
 
+    // Creating and storing the actual data
+    const now = new Date();
     const agreementData = {
       buyer: buyer,
       song: song,
@@ -53,12 +54,12 @@ const addLicense = (buyer, song, duration, totalCost) =>
       totalCost: totalCost,
     };
 
+    // Generating the hash and storing it before passing it back to the oracle
     let mj = new MerkleJson();
-    // let hash = Object.keys(licenses).pop();
-    // hash = parseInt(hash) + 1;
     let merklehash = mj.hash(agreementData);
     licenses[merklehash] = agreementData;
 
+    // Returning the data back to the blockchain
     resolve(merklehash);
   });
 
@@ -66,8 +67,10 @@ const addLicense = (buyer, song, duration, totalCost) =>
                        Check License Status
 ***************************************************************/
 
+// Function to check the expiry of the hash
 const checkExpiry = (hash) =>
   LicenseLock((resolve, reject) => {
+    // Setting the expiry date of the hash and passing it back to the oracle
     const expiryDate = new Date(licenses[hash].expiryDate);
     const now = new Date(new Date().toDateString());
     resolve(expiryDate.toDateString());

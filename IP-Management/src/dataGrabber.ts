@@ -1,3 +1,4 @@
+// Function to pass requests onto the appropriate API endpoints 
 export async function grabData(method: string, body: object) {
   const axios = require('axios');
   if (method == 'get') {
