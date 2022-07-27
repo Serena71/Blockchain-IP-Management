@@ -25,13 +25,8 @@ const catchErrors = (fn) => async (req, res) => {
   }
 };
 
-// app.get(
-//   '/test',
-//   catchErrors(async (req, res) => {
-//     return res.send(licenses);
-//   })
-// );
 
+// API endpoint to check status of a license
 app.get(
   '/checkStatus',
   catchErrors(async (req, res) => {
@@ -40,6 +35,7 @@ app.get(
   })
 );
 
+// API endpoint to create a new license in the database
 app.post(
   '/addLicense',
   catchErrors(async (req, res) => {
