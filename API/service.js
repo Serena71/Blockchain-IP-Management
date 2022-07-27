@@ -36,7 +36,8 @@ const save = () => update(licenses);
 ***************************************************************/
 
 const calculateExpiryDate = (purchaseDate, duration) => {
-  return new Date(purchaseDate.setMonth(purchaseDate.getMonth() + duration)).toDateString();
+  // 31536000000 = number of seconds in a year
+  return new Date(purchaseDate.getTime() + 31536000000 * duration).toDateString();
 };
 
 const addLicense = (buyer, song, duration, totalCost) =>
