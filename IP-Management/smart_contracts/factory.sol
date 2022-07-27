@@ -13,14 +13,14 @@ contract Factory {
     address address_container;
 
     // Storage of addresses of created song contracts
-    mapping (bytes32 => address) public address_map;
+    mapping (bytes32 => address) private address_map;
 
     // Storing manager of each song
-    bytes32  copy_right_id;
-    mapping (bytes32 => address) public song_manager_map;
+    bytes32 copy_right_id;
+    mapping (bytes32 => address) private song_manager_map;
 
     // Storing id of each song according to their song title
-    mapping (string => bytes32) public get_song_id;
+    mapping (string => bytes32) private get_song_id;
    
 
     constructor(address _oracle) {
