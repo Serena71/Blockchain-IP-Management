@@ -20,9 +20,10 @@ contract Song is LicenseAgreementOracleClient{
         string role;
         uint contribution;
     }
+
     mapping(uint => artist) artist_map;
-
-
+    mapping(address => string) license_map;
+    mapping(address => string) date_map;
 
     // constructor
     constructor(string memory _song_name, address _song_manager, bytes32 _copy_right_id, uint _price, address oracleAd) LicenseAgreementOracleClient(oracleAd){
@@ -71,20 +72,26 @@ contract Song is LicenseAgreementOracleClient{
         writeLicenseAgreement(buyer, address(this), duration, total_cost);
     }
 
-    function receiveHash(uint256 requestId, string memory _license_hash) internal override{
-        license_hashcode = _license_hash;
+    function receiveHash(uint256 requestId, address caller, string memory _license_hash) internal override{
+        license_map[caller] = _license_hash;
+    }
+
+    function getLicenseHash() public view returns (string memory) {
+        address caller = msg.sender;
+        return license_map[caller];
+    }
+
+    function getLicenseExpiry() public view returns (string memory) {
+        address caller = msg.sender;
+        return date_map[caller];
     }
 
     function getLicenseStatus(string memory _license_hash) public {
         requestLicenseStatus(_license_hash);
     }
 
-    function receiveLicenseStatus(uint256 requestId, string memory _license_status) internal override {
-        license_status = _license_status;
+    function receiveLicenseStatus(uint256 requestId, address caller, string memory _license_status) internal override {
+        // Do something with the caller mapping;
+        date_map[caller] = _license_status;
     }
-
-   
-
-
-   
 }

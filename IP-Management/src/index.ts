@@ -111,14 +111,17 @@ if (shellArgs.length < 1) {
       }
       handleRequestEvent(contract, async (requestType: Number, caller: String, requestId: Number, data: any) => {
         console.log('start data grabbing');
+        let c = caller;
+        
         let hex;
         if (requestType == 0) {
           // pass hashcode, get status of license
-          let param = web3.eth.abi.decodeParameters(['string'], data);
-
+          let param = web3.eth.abi.decodeParameters(['string', 'address'], data);
           let status = await grabData('get', { hashcode: param[0] });
-          hex = web3.eth.abi.encodeParameters(['string'], [status]);
+          hex = web3.eth.abi.encodeParameters(['string', 'address'], [status, param[1]]);
+          console.log('original sender is ' + param[1]);
           console.log('the license status is ' + status);
+          
         } else if (requestType == 1) {
           // pass licnese info, write into database, and get hashcode
           let params = web3.eth.abi.decodeParameters(['address', 'address', 'uint256', 'uint256'], data);
@@ -129,7 +132,9 @@ if (shellArgs.length < 1) {
             totalCost: params[3],
           };
           let hashcode = await grabData('post', body);
-          hex = web3.eth.abi.encodeParameters(['string'], [hashcode]);
+          console.log(caller);
+          
+          hex = web3.eth.abi.encodeParameters(['string', 'address'], [hashcode, params[0]]);
           console.log('the license hashcode is ' + hashcode);
         }
 
@@ -162,7 +167,7 @@ if (shellArgs.length < 1) {
         console.error(err);
       }
       const address = await contract.methods.searchSong(shellArgs[3]).call();
-      console.log('Song address for ' + shellArgs[4] + ' is ' + address);
+      console.log('Song address for ' + shellArgs[3] + ' is ' + address);
     } else if (shellArgs[1] == 'song') {
       if (shellArgs.length < 4) {
         console.error('e.g. node index.js run oracle 0x23a01...');
@@ -203,6 +208,30 @@ if (shellArgs.length < 1) {
       } else if (shellArgs[3] == 'receiveHashcode') {
         const hashcode = await contract.methods.license_hashcode().call();
         console.log(hashcode);
+      } 
+    } else if (shellArgs[1] == 'factory') {
+      let account!: Account;
+      let contract!: Contract;
+      try {
+        account = getAccount(web3, 'trusted_server');
+        let loaded = loadCompiledSols(['oracle', 'factory']);
+        let contractAddr = shellArgs[4];
+        contract = new web3.eth.Contract(loaded.contracts['factory']['Factory'].abi, contractAddr, {});
+      } catch (err) {
+        console.error('error listening factory contract');
+        console.error(err);
+      }
+
+      if (shellArgs[2] == 'addSong'){
+        console.log("adding song");
+        const receipt = await methodSend(
+          web3,
+          account,
+          contract.options.jsonInterface,
+          'addSong(string,address,uint256)',
+          contract.options.address,
+          [shellArgs[3], shellArgs[6], shellArgs[5]]
+        );
       }
     }
 

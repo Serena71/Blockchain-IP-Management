@@ -58,7 +58,7 @@ abstract contract LicenseAgreementOracleClient is OracleClient {
 
     function requestLicenseStatus(string memory data) internal{
         // Requesting status and receiving status
-        bytes memory requestData = abi.encode(data);
+        bytes memory requestData = abi.encode(data, msg.sender);
         requestDataFromOracle(0, requestData);
     }
 
@@ -66,25 +66,21 @@ abstract contract LicenseAgreementOracleClient is OracleClient {
     function replyDataFromOracle(uint256 requestType, uint256 requestId, bytes memory data) public override
     {
         // Decode data and segment it into receive hash or receive license
-        (string memory returnData) = abi.decode(data, (string));
+        (string memory returnData, address caller) = abi.decode(data, (string, address));
         if (requestType == 0){
-            receiveLicenseStatus(requestId, returnData);
+            receiveLicenseStatus(requestId, caller, returnData);
         } else if (requestType == 1){
-            receiveHash(requestId, returnData);
+            receiveHash(requestId, caller, returnData);
         }
     }
 
-    function receiveHash(uint256 requestId, string memory returnData) internal virtual{
+    function receiveHash(uint256 requestId, address caller, string memory returnData) internal virtual{
         // Receiving hash
-
         // Call song contracts receive hash
-
-        
     }
 
-    function receiveLicenseStatus( uint256 requestId, string memory returnData) internal virtual{
+    function receiveLicenseStatus( uint256 requestId, address caller, string memory returnData) internal virtual{
         // Call song contracts receive license status
-
         // Call song contracts receive license 
     }
 

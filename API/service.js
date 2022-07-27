@@ -36,7 +36,8 @@ const save = () => update(licenses);
 ***************************************************************/
 
 const calculateExpiryDate = (purchaseDate, duration) => {
-  return new Date(purchaseDate.setMonth(purchaseDate.getMonth() + duration)).toDateString();
+  // 31536000000 = number of seconds in a year
+  return new Date(purchaseDate.getTime() + 31536000000 * duration).toDateString();
 };
 
 const addLicense = (buyer, song, duration, totalCost) =>
@@ -69,7 +70,7 @@ const checkExpiry = (hash) =>
   LicenseLock((resolve, reject) => {
     const expiryDate = new Date(licenses[hash].expiryDate);
     const now = new Date(new Date().toDateString());
-    resolve(now > expiryDate ? 'expired' : 'valid');
+    resolve(expiryDate.toDateString());
   });
 
 module.exports = { save, addLicense, checkExpiry };
