@@ -58,7 +58,7 @@ abstract contract LicenseAgreementOracleClient is OracleClient {
 
     function requestLicenseStatus(string memory data) internal{
         // Requesting status and receiving status
-        bytes memory requestData = abi.encode(data);
+        bytes memory requestData = abi.encode(data, msg.sender);
         requestDataFromOracle(0, requestData);
     }
 
@@ -76,15 +76,11 @@ abstract contract LicenseAgreementOracleClient is OracleClient {
 
     function receiveHash(uint256 requestId, address caller, string memory returnData) internal virtual{
         // Receiving hash
-
         // Call song contracts receive hash
-
-        
     }
 
     function receiveLicenseStatus( uint256 requestId, address caller, string memory returnData) internal virtual{
         // Call song contracts receive license status
-
         // Call song contracts receive license 
     }
 

@@ -116,11 +116,12 @@ if (shellArgs.length < 1) {
         let hex;
         if (requestType == 0) {
           // pass hashcode, get status of license
-          let param = web3.eth.abi.decodeParameters(['string'], data);
-
+          let param = web3.eth.abi.decodeParameters(['string', 'address'], data);
           let status = await grabData('get', { hashcode: param[0] });
-          hex = web3.eth.abi.encodeParameters(['string', 'address'], [status, "0x4624C6C4Fd1Cff64FCAd238f9d8bCFbF9859847c"]);
+          hex = web3.eth.abi.encodeParameters(['string', 'address'], [status, param[1]]);
+          console.log('original sender is ' + param[1]);
           console.log('the license status is ' + status);
+          
         } else if (requestType == 1) {
           // pass licnese info, write into database, and get hashcode
           let params = web3.eth.abi.decodeParameters(['address', 'address', 'uint256', 'uint256'], data);
