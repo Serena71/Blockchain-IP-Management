@@ -38,12 +38,14 @@ contract Song is LicenseAgreementOracleClient{
     mapping(address => string) license_map;
     mapping(address => string) date_map;
 
+    mapping(address => uint256) balance;
+
     // constructor
     constructor(string memory _song_name, address _song_manager, bytes32 _copy_right_id, uint _price, address oracleAd) LicenseAgreementOracleClient(oracleAd){
         song_name = _song_name;
         song_manager = _song_manager;
         copy_right_id = _copy_right_id;
-        price = _price;
+        price = _price * 1 gwei;
     }
     
     // Function to add artist, only accessible by song manager designated in the constructor
@@ -81,12 +83,40 @@ contract Song is LicenseAgreementOracleClient{
     }
 
     // Function to purchase song, sets license hash for the caller once purchase has gone through
-    function purchaseSong(uint256 _duration) public{
+    function purchaseSong(uint256 _duration) public payable {
+        uint256 total_cost = price * _duration;
         uint256 duration = _duration;
         address buyer = msg.sender;
-        uint256 total_cost = price * duration;
-        // require(total_cost == expected_amount, "The amount you transferred does not match with the actual price");
+
+        // Check
+        require(msg.value == total_cost, "The amount transferred");
+
+        // Effect
+        // Set up payment distribution
+        uint256 block_amount = total_cost / 100;
+        for (uint i = 0; i < number_of_artists; i++)
+        {
+            balance[artist_map[i].artist_address] += block_amount * artist_map[i].contribution;
+        }
+
+        // Interaction
         writeLicenseAgreement(buyer, address(this), duration, total_cost);
+    }
+
+    function withdraw() public {
+        address payable add = payable(msg.sender);
+        // Check
+        uint256 result = balance[msg.sender];
+
+        // Effect
+        balance[msg.sender] = 0;
+
+        // Interaction
+        add.send(result);
+    }
+
+    function checkBalance() public view returns (uint256){
+        return balance[msg.sender];
     }
 
     // Function called once the oracle has returned the hash of license for the purchased song
