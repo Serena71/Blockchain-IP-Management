@@ -68,8 +68,9 @@ contract Song is LicenseAgreementOracleClient{
     }
 
     // Function to get the song price
-    function getSongPrice() public view returns(uint) {
-        return price;
+    function getSongPrice(uint256 _duration) public view returns(uint256) {
+        uint256 cost = price * _duration;
+        return cost;
     }
 
     // Function to get the list of artist's who've contributed to this song

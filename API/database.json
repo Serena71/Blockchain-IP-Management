@@ -38,5 +38,53 @@
     "duration": "12",
     "expiryDate": "Thu Jan 26 2073",
     "totalCost": "144"
+  },
+  "76669a4f90a0a6fadc0a18c724201a33": {
+    "buyer": "0xA589d4E39CC9Aa4A59C393F48A34dcc971d2b07A",
+    "song": "0x86f3D231B0eF314Ba19Ca454a6c046419e056Ddc",
+    "purchaseDate": "Thu Jul 28 2022",
+    "duration": "1",
+    "expiryDate": "Fri Jul 28 2023",
+    "totalCost": "10000000000"
+  },
+  "444c98830daab270e011632e0e7a6602": {
+    "buyer": "0x50e3cea551177979C1cDf2AeCa9d3C2E2709D1Db",
+    "song": "0x55D3541406a5A9C1725d875541030d479d4f3C8c",
+    "purchaseDate": "Thu Jul 28 2022",
+    "duration": "1",
+    "expiryDate": "Fri Jul 28 2023",
+    "totalCost": "10000000000"
+  },
+  "37afc8db023c4330442011491a42f366": {
+    "buyer": "0x50e3cea551177979C1cDf2AeCa9d3C2E2709D1Db",
+    "song": "0x7260A5878AC5E8F288157D985cB831638C69F364",
+    "purchaseDate": "Thu Jul 28 2022",
+    "duration": "1",
+    "expiryDate": "Fri Jul 28 2023",
+    "totalCost": "10000000000"
+  },
+  "fa8e74a7ac73f3148cb3a382538b954b": {
+    "buyer": "0x50e3cea551177979C1cDf2AeCa9d3C2E2709D1Db",
+    "song": "0x087680EeD397598E0634d9d15eC1A5565Cce1ed6",
+    "purchaseDate": "Thu Jul 28 2022",
+    "duration": "2",
+    "expiryDate": "Sat Jul 27 2024",
+    "totalCost": "20000000000"
+  },
+  "15ef8900d8f30e5dc7c396882ebb666a": {
+    "buyer": "0x50e3cea551177979C1cDf2AeCa9d3C2E2709D1Db",
+    "song": "0x1A2be079BC758E0Fa799D273df3278C197993Fef",
+    "purchaseDate": "Thu Jul 28 2022",
+    "duration": "1",
+    "expiryDate": "Fri Jul 28 2023",
+    "totalCost": "10000000000"
+  },
+  "eca378c7b4efc64265f5da7c17c098b5": {
+    "buyer": "0x50e3cea551177979C1cDf2AeCa9d3C2E2709D1Db",
+    "song": "0x11C41f2aaA471C937c177843fbeaBDEa081436fa",
+    "purchaseDate": "Thu Jul 28 2022",
+    "duration": "1",
+    "expiryDate": "Fri Jul 28 2023",
+    "totalCost": "10000000000"
   }
 }
