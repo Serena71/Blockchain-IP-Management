@@ -11,6 +11,7 @@ then run `npm start`
 ## IP-Management Server
 
 Navigate to IP-Management folder
+
 `mkdir eth_providers && touch eth_providers/providers.json`
 
 `mkdir eth_accounts && touch eth_accounts/accounts.json`
