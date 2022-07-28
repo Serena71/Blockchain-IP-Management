@@ -19,13 +19,3 @@ To deploy the oracle contract: `npm start`
 To deploy factory contract: `npm run deploy [oracle-address-from-previous-step]`
 
 To listen to request: `npm run listen [oracle-address-from-previous-step]`
-
-To get address of an deployed song oracle: `npm run invoke [factory-address] search [sone title]`
-
-To request a license purchase: `npm run invoke song [song-address] purchase [duration]`
-
-To receive license hashcode: `npm run invoke song [song-address] receiveHashcode`
-
-To request a license status check: `npm run invoke song [song-address] requestStatus [hashcode]`
-
-To receive license status: `npm run invoke song [song-address] receiveStatus`
