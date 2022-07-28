@@ -75,10 +75,10 @@ const checkExpiry = (hash) =>
     const now = new Date(new Date().toDateString());
     if(now > expiryDate){
       resolve("Expired")
-    }else if (now==expiryDate){
-      resoleve("Expire today")
+    }else if (now == expiryDate){
+      resolve("Expire today")
     }else{
-        const daysLeft = Math.floor((date2 - date1) / (1000*60*60*24))
+        const daysLeft = Math.floor((expiryDate - now) / (1000*60*60*24))
       resolve(`Expire in ${daysLeft} days`)
     }
   
