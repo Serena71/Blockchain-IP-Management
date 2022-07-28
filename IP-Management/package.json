@@ -7,7 +7,6 @@
     "start": "npx tsc && node build/index.js deploy oracle",
     "deploy": "npx tsc && node build/index.js deploy factory",
     "listen": "npx tsc && node build/index.js listen oracle",
-    "invoke": "npx tsc && node build/index.js invoke",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
