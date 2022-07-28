@@ -73,7 +73,15 @@ const checkExpiry = (hash) =>
     // Setting the expiry date of the hash and passing it back to the oracle
     const expiryDate = new Date(licenses[hash].expiryDate);
     const now = new Date(new Date().toDateString());
-    resolve(expiryDate.toDateString());
+    if(now > expiryDate){
+      resolve("Expired")
+    }else if (now==expiryDate){
+      resoleve("Expire today")
+    }else{
+        const daysLeft = Math.floor((date2 - date1) / (1000*60*60*24))
+      resolve(`Expire in ${daysLeft} days`)
+    }
+  
   });
 
 module.exports = { save, addLicense, checkExpiry };
