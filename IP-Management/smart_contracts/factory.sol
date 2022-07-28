@@ -38,9 +38,7 @@ contract Factory {
     function addSong(string memory song_name, address song_manager, uint price) public restricted{
         // Pseudorandom data to generate a unique copy_right_id
         string memory temp;
-        // temp = Strings.toString(block.number);
-        // temp = string(bytes.concat(bytes(song_name),bytes(temp)));
-        temp = "random data";
+        temp = song_name;
         copy_right_id = sha256(abi.encodePacked(temp));
 
         // Creating new song contract and storing relevant details

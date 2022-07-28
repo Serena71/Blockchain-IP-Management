@@ -90,7 +90,7 @@ contract Song is LicenseAgreementOracleClient{
         address buyer = msg.sender;
 
         // Check
-        require(msg.value == total_cost, "The amount transferred");
+        require(msg.value == total_cost, "The amount transferred does not equal the cost of the license");
 
         // Effect
         // Set up payment distribution
