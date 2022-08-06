@@ -9,7 +9,7 @@ This will provide a factory contract where the authorised user is able to deploy
 
 Payments need to be made in the exact amount of ethereum expected, any more or less will result in an error.
 
-Since all development was done locally through Ganache, there is no addresses deployed publically and no address to provide for smart_contract_addresses.txt.
+Since all development was done locally through Ganache, there is no addresses deployed publically and no address to provide for smart_contract_addresses.txt. No deployment on public test networks was made since it would designate the user who deployed the contract as a trusted user.
 
 ## API Server
 
@@ -21,13 +21,15 @@ then run `npm start`
 
 ## IP-Management Server
 
+Ensure Ganache is running.
+
 Navigate to IP-Management folder
 
 `mkdir eth_providers && touch eth_providers/providers.json`
 
 `mkdir eth_accounts && touch eth_accounts/accounts.json`
 
-fill in providers and accounts
+fill in providers and accounts details obtained from Ganache.
 
 e.g.
 
