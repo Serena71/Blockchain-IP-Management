@@ -9,7 +9,7 @@ This will provide a factory contract where the authorised user is able to deploy
 
 Payments need to be made in the exact amount of ethereum expected, any more or less will result in an error.
 
-Since all development was done locally through Ganache, there is no addresses listed under the smart contract addresses.
+Since all development was done locally through Ganache, there is no addresses deployed publically and no address to provide for smart_contract_addresses.txt.
 
 ## API Server
 
